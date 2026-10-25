@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Crew Management System</title>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #eef2ff, #dbeafe);
+            color: #1e293b;
+        }
+
+        /* HEADER */
+
+        header {
+            background: linear-gradient(90deg, #1e3a8a, #2563eb);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        header p {
+            margin-top: 8px;
+        }
+
+        /* CONTAINER */
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        /* CARD */
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #1e3a8a;
+        }
+
+        /* FORM */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        /* BUTTONS */
+
+        button {
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .add-btn {
+            background: #2563eb;
+            color: white;
+            margin-top: 15px;
+        }
+
+        .refresh-btn {
+            background: #059669;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .update-btn {
+            background: #f59e0b;
+            color: white;
+            margin-right: 5px;
+        }
+
+        .delete-btn {
+            background: #dc2626;
+            color: white;
+        }
+
+        /* TABLE */
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        th {
+            background: #1e3a8a;
+            color: white;
+            padding: 12px;
+        }
+
+        td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tr:hover {
+            background: #f1f5f9;
+        }
+
+        .status {
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        /* MODAL */
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background: white;
+            width: 400px;
+            max-width: 90%;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 150px auto;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .save-btn {
+            width: 100%;
+            margin-top: 20px;
+            background: #2563eb;
+            color: white;
+        }
+
+        /* MOBILE */
+
+        @media(max-width: 768px) {
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                width: 95%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header>
+    <h1>✈ Crew Management System</h1>
+    <p>Manage Flight Crew Details Easily</p>
+</header>
+
+
+<div class="container">
+
+    <!-- ADD CREW -->
+
+    <div class="card">
+
+        <h2>Add Crew Member</h2>
+
+        <div class="form-grid">
+
+            <input type="text" id="crewName"
+                   placeholder="Enter Crew Name">
+
+            <input type="date" id="dob">
+
+            <input type="text" id="passportNumber"
+                   placeholder="Enter Passport Number">
+
+            <input type="date" id="passportExpiryDate">
+
+            <input type="text" id="flightNumberAssigned"
+                   placeholder="Flight Number">
+
+            <input type="text" id="originAirport"
+                   placeholder="Origin Airport">
+
+            <input type="text" id="destinationAirport"
+                   placeholder="Destination Airport">
+
+            <select id="journeyStatus">
+
+                <option value="">Select Journey Status</option>
+                <option value="Scheduled">Scheduled</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+
+            </select>
+
+        </div>
+
+        <button class="add-btn" id="addCrew">
+            + Add Crew Member
+        </button>
+
+    </div>
+
+
+    <!-- CREW LIST -->
+
+    <div class="card">
+
+        <h2>Crew Members</h2>
+
+        <button class="refresh-btn" id="loadCrew">
+            Refresh Data
+        </button>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>DOB</th>
+                    <th>Passport</th>
+                    <th>Expiry</th>
+                    <th>Flight</th>
+                    <th>Origin</th>
+                    <th>Destination</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+
+                </thead>
+
+                <tbody id="crewTableBody">
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- UPDATE STATUS MODAL -->
+
+<div id="updateModal" class="modal">
+
+    <div class="modal-content">
+
+        <span class="close-btn"
+              onclick="closeUpdateBox()">
+            &times;
+        </span>
+
+        <h2>Update Journey Status</h2>
+
+        <!-- Hidden Crew ID -->
+
+        <input type="hidden" id="updateCrewId">
+
+        <label>Select New Status</label>
+
+        <br><br>
+
+        <select id="updateJourneyStatus">
+
+            <option value="Scheduled">
+                Scheduled
+            </option>
+
+            <option value="In Progress">
+                In Progress
+            </option>
+
+            <option value="Completed">
+                Completed
+            </option>
+
+            <option value="Cancelled">
+                Cancelled
+            </option>
+
+        </select>
+
+        <button class="save-btn"
+                onclick="updateStatus()">
+
+            Update Status
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const API_URL = "http://localhost:8080/crew";
+
+
+    /* ===============================
+       GET ALL CREW
+    =============================== */
+
+    function loadCrew() {
+
+        $.ajax({
+
+            url: API_URL + "/getallcrews",
+
+            type: "GET",
+            
+             headers: {
+        "Authorization": "Bearer " + sessionStorage.getItem("jwtToken")
+    },
+
+
+            success: function(data) {
+
+                $("#crewTableBody").empty();
+
+                $.each(data, function(index, crew) {
+
+                    let row = `
+                        <tr>
+
+                            <td>${crew.crewId}</td>
+
+                            <td>${crew.crewName}</td>
+
+                            <td>${crew.dob}</td>
+
+                            <td>${crew.passportNumber}</td>
+
+                            <td>${crew.passportExpiryDate}</td>
+
+                            <td>${crew.flightNumberAssigned}</td>
+
+                            <td>${crew.originAirport}</td>
+
+                            <td>${crew.destinationAirport}</td>
+
+                            <td>
+                                <span class="status">
+                                    ${crew.journeyStatus}
+                                </span>
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="update-btn"
+                                    onclick="openUpdateBox(
+                                        ${crew.crewId},
+                                        '${crew.journeyStatus}'
+                                    )">
+
+                                    Update Status
+
+                                </button>
+
+                                <button
+                                    class="delete-btn"
+                                    onclick="deleteCrew(
+                                        ${crew.crewId}
+                                    )">
+
+                                    Delete
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+                    `;
+
+                    $("#crewTableBody").append(row);
+
+                });
+
+            },
+
+            error: function(xhr) {
+
+                console.log(xhr.responseText);
+
+                alert("Error loading crew data!");
+
+            }
+
+        });
+
+    }
+
+
+    /* ===============================
+       ADD CREW
+    =============================== */
+
+    $("#addCrew").click(function() {
+
+        let crewData = {
+
+            crewName: $("#crewName").val(),
+
+            dob: $("#dob").val(),
+
+            passportNumber: $("#passportNumber").val(),
+
+            passportExpiryDate:
+                $("#passportExpiryDate").val(),
+
+            flightNumberAssigned:
+                $("#flightNumberAssigned").val(),
+
+            originAirport:
+                $("#originAirport").val(),
+
+            destinationAirport:
+                $("#destinationAirport").val(),
+
+            journeyStatus:
+                $("#journeyStatus").val()
+        };
+
+
+        $.ajax({
+
+            url: API_URL + "/addcrew",
+
+            type: "POST",
+
+            contentType: "application/json",
+
+            //by adding this we are authorizing the user for the add crew operation 
+            headers: {
+                "Authorization": "Bearer " + sessionStorage.getItem("jwtToken")
+            },
+
+            data: JSON.stringify(crewData),
+
+            success: function(response) {
+
+                alert("Crew Member Added Successfully!");
+
+                // Clear all form fields
+
+                $("#crewName").val("");
+
+                $("#dob").val("");
+
+                $("#passportNumber").val("");
+
+                $("#passportExpiryDate").val("");
+
+                $("#flightNumberAssigned").val("");
+
+                $("#originAirport").val("");
+
+                $("#destinationAirport").val("");
+
+                $("#journeyStatus").val("");
+
+                // Reload table
+
+                loadCrew();
+
+            },
+
+            error: function(xhr) {
+
+                console.log(xhr.responseText);
+
+                alert(
+                    "Error adding crew member! Status: "
+                    + xhr.status
+                );
+
+            }
+
+        });
+
+    });
+
+
+    /* ===============================
+       OPEN UPDATE BOX
+    =============================== */
+
+    function openUpdateBox(id, currentStatus) {
+
+        // Store ID of selected crew
+
+        $("#updateCrewId").val(id);
+
+        // Show current status
+
+        $("#updateJourneyStatus").val(currentStatus);
+
+        // Open modal
+
+        $("#updateModal").show();
+
+    }
+
+
+    /* ===============================
+       CLOSE UPDATE BOX
+    =============================== */
+
+    function closeUpdateBox() {
+
+        $("#updateModal").hide();
+
+    }
+
+
+    /* ===============================
+       UPDATE ONLY STATUS
+    =============================== */
+
+    function updateStatus() {
+
+        let id = $("#updateCrewId").val();
+
+        let newStatus =
+            $("#updateJourneyStatus").val();
+
+
+        // Send ONLY journeyStatus
+
+        let statusData = {
+
+            journeyStatus: newStatus
+
+        };
+
+
+        $.ajax({
+
+            url: API_URL + "/" + id + "/status",
+
+            type: "PUT",
+
+            contentType: "application/json",
+
+            //////////////////////////////////////////////////////////////////////
+            headers: {
+            "Authorization": "Bearer " + sessionStorage.getItem("jwtToken")
+            },
+
+            data: JSON.stringify(statusData),
+
+            success: function(response) {
+
+                alert(
+                    "Journey Status Updated Successfully!"
+                );
+
+                closeUpdateBox();
+
+                // Reload data to show new status
+
+                loadCrew();
+
+            },
+
+            error: function(xhr) {
+
+                console.log("Update Error:", xhr.status);
+                console.log(xhr.responseText);
+
+                alert(
+                    "Error updating journey status!\n\n" +
+                    "Status Code: " + xhr.status
+                );
+
+            }
+
+        });
+
+    }
+
+
+    /* ===============================
+       DELETE CREW
+    =============================== */
+
+    function deleteCrew(id) {
+
+        if (confirm(
+            "Are you sure you want to delete this crew member?"
+        )) {
+
+            $.ajax({
+
+                url: API_URL + "/" + id,
+
+                type: "DELETE",
+
+                ///////////////////////////////////////////////////////////////////////////////
+                headers: {
+                    "Authorization": "Bearer " + sessionStorage.getItem("jwtToken")
+                    },
+
+                success: function() {
+
+                    alert(
+                        "Crew deleted successfully!"
+                    );
+
+                    loadCrew();
+
+                },
+
+                error: function(xhr) {
+
+                    console.log(xhr.responseText);
+
+                    alert(
+                        "Error deleting crew!"
+                    );
+
+                }
+
+            });
+
+        }
+
+    }
+
+
+    /* ===============================
+       REFRESH BUTTON
+    =============================== */
+
+    $("#loadCrew").click(function() {
+
+        loadCrew();
+
+    });
+
+
+    /* ===============================
+       LOAD DATA ON PAGE OPEN
+    =============================== */
+
+    $(document).ready(function() {
+
+        loadCrew();
+
+    });
+
+</script>
+
+</body>
+</html>

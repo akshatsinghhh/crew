@@ -1,0 +1,135 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #eaf1fa, #d5e4f5);
+    min-height: 100vh;
+}
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    background-color: white;
+    padding: 38px 32px;
+    border-radius: 16px;
+    box-shadow: 0 12px 35px rgba(20, 45, 80, 0.15);
+}
+
+.logo {
+    width: 65px;
+    height: 65px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #123b68;
+    color: white;
+    border-radius: 50%;
+    font-size: 32px;
+}
+
+h1 {
+    text-align: center;
+    color: #123b68;
+    font-size: 25px;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    color: #26364a;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+input {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #ccd5e0;
+    border-radius: 8px;
+    outline: none;
+    font-size: 15px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus {
+    border-color: #2463a6;
+    box-shadow: 0 0 0 3px rgba(36, 99, 166, 0.12);
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    background-color: #123b68;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #1c548e;
+}
+
+button:disabled {
+    background-color: #8297ae;
+    cursor: not-allowed;
+}
+
+.message {
+    font-size: 14px;
+    margin: 0 0 15px;
+    line-height: 1.5;
+}
+
+.message.error {
+    color: #c62828;
+}
+
+.message.success {
+    color: #19733b;
+}
+
+.footer-text {
+    margin-top: 25px;
+    text-align: center;
+    color: #8490a0;
+    font-size: 12px;
+}
+
+@media (max-width: 480px) {
+    .login-card {
+        padding: 30px 22px;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+}
