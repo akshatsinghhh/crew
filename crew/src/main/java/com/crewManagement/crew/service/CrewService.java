@@ -40,13 +40,7 @@ public class CrewService {
 
         if (existingCrew != null) {
 
-            existingCrew.setCrewName(crew.getCrewName());
-            existingCrew.setDob(crew.getDob());
-            existingCrew.setPassportNumber(crew.getPassportNumber());
-            existingCrew.setPassportExpiryDate(crew.getPassportExpiryDate());
-            existingCrew.setFlightNumberAssigned(crew.getFlightNumberAssigned());
-            existingCrew.setOriginAirport(crew.getOriginAirport());
-            existingCrew.setDestinationAirport(crew.getDestinationAirport());
+            // Update only journey status
             existingCrew.setJourneyStatus(crew.getJourneyStatus());
 
             return crewRepository.save(existingCrew);
